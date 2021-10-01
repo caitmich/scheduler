@@ -1,5 +1,6 @@
 import React from "react"
 import InterviewerListItem from "./InterviewerListItem";
+import "components/InterviewerList.scss"
 
 export default function InterviewerList(props){
   //get an arr containing each of interviewer objects from the interviewer obj in props
@@ -10,8 +11,8 @@ export default function InterviewerList(props){
 
     name={interviewer.name}
     avatar={interviewer.avatar}
-    selected={interviewer.id === props.interviewer}
-    setInterviewer={(event) => props.setInterviewer(interviewer.id)}
+    selected={interviewer.id === props.value}
+    setInterviewer={(event) => props.onChange(interviewer.id)}
   />)
 
   return (
