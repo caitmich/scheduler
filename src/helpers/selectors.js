@@ -37,5 +37,35 @@ export function getInterview(state, interview) {
     avatar:interviewerInfo.avatar
     }
   return(interview)
+};
+
+export function getInterviewersForDay(state, day) {
+  //filter days obj to find where the name matches the provided day
   
-}
+    if(state.days.length === 0){
+      return [];
+    }
+
+  const filteredDays = state.days.filter(days => days.name === day);
+
+  if (filteredDays.length === 0){
+    return []
+  }
+  //get the arr of interviewers from the returned matching day object
+  const interviewersArray = (filteredDays[0]['interviewers']);
+
+  const answerArr = []
+  
+  if(interviewersArray.length === 0) {
+    return [];
+  }
+  for(const interviewer of interviewersArray) {    
+    answerArr.push(state.interviewers[interviewer]);
+  } 
+  return(answerArr)
+};
+
+
+
+
+
