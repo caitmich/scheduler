@@ -12,18 +12,30 @@ export function getAppointmentsForDay(state, day) {
   }
   
   const appointmentsArray = (filteredDays[0]['appointments'])
-  
-  
   const answerArr = []
   
   if(appointmentsArray.length === 0) {
     return [];
   }
-  
   for(const id of appointmentsArray) {    
     answerArr.push(state.appointments[id]);
   } 
   return(answerArr)
 
+}
 
+export function getInterview(state, interview) {
+  if(!interview){
+    return null;
+  }
+    //find interviewer info from interviewer id
+    const interviewerId = interview.interviewer
+    const interviewerInfo = (state.interviewers[interviewerId])
+    
+    interview['interviewer'] = {id: interviewerInfo.id,
+    name: interviewerInfo.name,
+    avatar:interviewerInfo.avatar
+    }
+  return(interview)
+  
 }
