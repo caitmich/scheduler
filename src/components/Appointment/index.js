@@ -6,6 +6,17 @@ import Empty from "components/Appointment/Empty";
 import useVisualMode from "hooks/useVisualMode";
 import Form from "./Form";
 
+
+/* <Appointment 
+      key={appointment.id}
+      interview={interview}
+      {...appointment}
+      interviewers={dailyInterviewers}
+      bookInterview={bookInterview}
+      allInterviewers={{...state.interviewers}}
+      /> */
+
+// appointment component:
 export default function Appointment(props){
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
@@ -14,6 +25,22 @@ export default function Appointment(props){
   const {mode, transition, back} = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
+  console.log("fetching appointment interviewer", props.interview)
+
+
+  function save(name, interviewer){
+    const interview = {
+      student: name,
+      interviewer
+    };
+    console.log("interviewer", interviewer)
+    console.log("interview obj", interview);
+    props.bookInterview(props.id, interview);
+    //transition to show mode once interview is booked
+    transition(SHOW);
+  }
+
+  // const interviewerName = props.interview.inter
 
   return (
     <Fragment>
@@ -32,6 +59,7 @@ export default function Appointment(props){
     {mode === CREATE && <Form 
     interviewers={props.interviewers}
     onCancel={() => back(EMPTY)}
+    onSave = {save}
     />}
 
     </article>

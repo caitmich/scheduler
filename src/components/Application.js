@@ -6,6 +6,7 @@ import DayList from "./DayList";
 import Appointment from "./Appointment";
 import {getAppointmentsForDay, getInterview, getInterviewersForDay} from "helpers/selectors";
 
+// Application component:
 
 export default function Application(props) {
 
@@ -21,11 +22,9 @@ export default function Application(props) {
 
   //to set state after merging all useState into one variable above
   const setDay = day => setState({...state, day});
-  // const setDays = days => setState(prev => ({...prev, days}));
-  console.log(dailyInterviewers)
 
-  // const appointmentsArray = Object.values(appointments);
   const parsedAppointments = dailyAppointments.map((appointment) => {
+    // console.log("appointment", appointment)
     const interview = getInterview(state, appointment.interview);
     return (
       <Appointment 
@@ -33,6 +32,8 @@ export default function Application(props) {
       interview={interview}
       {...appointment}
       interviewers={dailyInterviewers}
+      bookInterview={bookInterview}
+      allInterviewers={{...state.interviewers}}
       />
       );
   });
@@ -46,6 +47,24 @@ export default function Application(props) {
       setState(prev => ({...prev, days:all[0].data, appointments:all[1].data, interviewers: all[2].data}));
     })
   }, [])
+
+  function bookInterview(id, interview){
+    //create a new appointment obj from the interview obj passed from onSave in form, and take appointments[id] to copy the appointment data at that id
+    const appointment = {
+      ...state.appointments[id],
+      interview: {...interview}
+    };
+    // create a copy of the appointments obj and then replace the existing record at the given appointment id with the new appointment obj:
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    axios.put(`/api/appointments/${id}`, appointment);
+  
+      setState({...state, appointments})
+  };
+
 
   return (
     <main className="layout">
@@ -62,8 +81,10 @@ export default function Application(props) {
         <img className="sidebar__lhl sidebar--centered" src="images/lhl.png" alt="Lighthouse Labs"/>
       </section>
       <section className="schedule">
+        {/* list all appointments */}
           {parsedAppointments}
-          <Appointment key="last" time="5pm" />
+        {/* last appointment of the day */}
+          <Appointment key="last" time="5pm"/>
         
       </section>
     </main>
