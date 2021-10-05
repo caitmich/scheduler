@@ -17,26 +17,30 @@ export default function Appointment(props){
   const SAVING = "SAVING";
   const DELETING = "DELETING";
   const CONFIRM = "CONFIRM";
+  const EDIT = "EDIT";
+  const ERROR_SAVE = "ERROR_SAVE";
+  const ERROR_DELETE = "ERROR_DELETE";
 
   const {mode, transition, back} = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
 
-  async function save(name, interviewer){
+  function save(name, interviewer){
     const interview = {
       student: name,
       interviewer
     };
     transition(SAVING);
-    await props.bookInterview(props.id, interview);
-    //transition to show mode once interview is booked
-    transition(SHOW);
+
+    props.bookInterview(props.id, interview).then(() => transition(SHOW))
+    .catch((error) => transition(ERROR_SAVE, true))
   };
 
-  async function remove(id){
-    await props.cancelInterview(props.id);
-    transition(DELETING);
-    transition(EMPTY);
+  function remove(id){
+    transition(DELETING, true);
+    props.cancelInterview(props.id)
+    .then(() => transition(EMPTY) )
+    .catch((error) => transition(ERROR_DELETE, true))
   }
 
 
@@ -53,6 +57,7 @@ export default function Appointment(props){
     student={props.interview.student} 
     interviewer={props.interview.interviewer}
     onDelete={() => transition(CONFIRM)}
+    onEdit={() => transition(EDIT)}
     />
     )}
     {mode === CREATE && <Form 
@@ -65,7 +70,15 @@ export default function Appointment(props){
 
     {mode === CONFIRM && <Confirm 
     onCancel = {() => back(SHOW)} 
-    onConfirm = {remove}/>}
+    onConfirm = {remove}
+    />}
+    {mode === EDIT && <Form  
+    interviewers={props.interviewers}
+    name={props.name}
+    interviewer={props.interviewer}
+    onCancel={() => transition(SHOW)}
+    onSave = {save}
+    />}
 
     </article>
     </Fragment> 

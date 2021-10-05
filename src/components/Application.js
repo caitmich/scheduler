@@ -53,6 +53,7 @@ export default function Application(props) {
   }, [])
 
   async function bookInterview(id, interview){
+    console.log({interview});
     //create a new appointment obj from the interview obj passed from onSave in form, and take appointments[id] to copy the appointment data at that id
     const appointment = {
       ...state.appointments[id],
@@ -64,7 +65,7 @@ export default function Application(props) {
       ...state.appointments,
       [id]: appointment
     };
-    await axios.put(`/api/appointments/${id}`, appointment);
+    await axios.put(`/api/appointments/${id}`, appointment)
   
     setState({...state, appointments});
   };

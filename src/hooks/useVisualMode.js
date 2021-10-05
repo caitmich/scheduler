@@ -7,12 +7,12 @@ export default function useVisualMode(initial){
   const transition = (newMode, replace = false) => {
     if(!replace){
       setMode(newMode);
-      const newHistory = [...history, newMode]
+      const newHistory = (prev => ([...history, newMode]))
       setHistory(newHistory);
     }
     //if replace is true, replace last item in arr with newmode and don't arr.push
     const lastItem = (history.length)-1;
-    const otherHistory =[...history]
+    const otherHistory = (prev => ([...history]))
     otherHistory[lastItem] = newMode;
     setMode(newMode);
   }
