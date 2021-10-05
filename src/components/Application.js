@@ -15,6 +15,7 @@ const {
   cancelInterview
 } = useApplicationData();
   
+console.log("state.day", state.day);
   const dailyInterviewers = getInterviewersForDay(state, state.day);
   const dailyAppointments = getAppointmentsForDay(state, state.day);
   const parsedAppointments = dailyAppointments.map((appointment) => {

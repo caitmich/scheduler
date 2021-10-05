@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "components/Button";
 import InterviewerList from "components/InterviewerList";
 
@@ -6,7 +6,7 @@ import InterviewerList from "components/InterviewerList";
 export default function Form(props){
   const [name, setName] = useState(props.name || "");
   const [interviewer, setInterviewer] = useState(props.interviewer || null);
-
+  const [error, setError] = useState("");
 
   const handleChange = (event) => {
     setName(event.target.value)
@@ -22,14 +22,17 @@ export default function Form(props){
     props.onCancel();
   }
 
-  const save = (name, interviewer) => {
-    props.onSave(name, interviewer);
-    console.log(name, interviewer);
-  }
+  // const save = (name, interviewer) => {
+  //   props.onSave(name, interviewer);
+  //   console.log(name, interviewer);
+  // }
 
-  const studentName = () => {
-    setName(props.name)
-    setInterviewer(props.interviewer)
+  function validate(name, interviewer){
+    if (name === "") {
+      setError("Student name cannot be blank");
+      return;
+    }
+    props.onSave(name, interviewer);
   }
 
   return(
@@ -44,15 +47,16 @@ export default function Form(props){
         placeholder={"Enter Student Name"}
         value={name}
         onChange={(event) => handleChange(event)}
+        data-testid="student-name-input"
       />
     </form>
-
+    <section className="appointment__validation">{error}</section>
     <InterviewerList interviewers={props.interviewers} value={interviewer} onChange={setInterviewer} />
   </section>
   <section className="appointment__card-right">
     <section className="appointment__actions">
       <Button onClick={cancel}danger>Cancel</Button>
-      <Button onClick={() => save(name, interviewer)} confirm>Save</Button>
+      <Button onClick={() => validate(name, interviewer)} confirm>Save</Button>
     </section>
   </section>
 </main>
