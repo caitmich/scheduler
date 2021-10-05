@@ -6,16 +6,8 @@ import Empty from "components/Appointment/Empty";
 import useVisualMode from "hooks/useVisualMode";
 import Form from "./Form";
 import Status from "./Status";
+import Confirm from "./Confirm";
 
-
-/* <Appointment 
-      key={appointment.id}
-      interview={interview}
-      {...appointment}
-      interviewers={dailyInterviewers}
-      bookInterview={bookInterview}
-      allInterviewers={{...state.interviewers}}
-      /> */
 
 // appointment component:
 export default function Appointment(props){
@@ -23,6 +15,8 @@ export default function Appointment(props){
   const SHOW = "SHOW";
   const CREATE = "CREATE";
   const SAVING = "SAVING";
+  const DELETING = "DELETING";
+  const CONFIRM = "CONFIRM";
 
   const {mode, transition, back} = useVisualMode(
     props.interview ? SHOW : EMPTY
@@ -39,6 +33,12 @@ export default function Appointment(props){
     transition(SHOW);
   };
 
+  async function remove(id){
+    await props.cancelInterview(props.id);
+    transition(DELETING);
+    transition(EMPTY);
+  }
+
 
   return (
     <Fragment>
@@ -49,9 +49,10 @@ export default function Appointment(props){
     onAdd={() => transition(CREATE)}
     />
     }
-    { mode === SHOW && (<Show 
+    {mode === SHOW && (<Show 
     student={props.interview.student} 
     interviewer={props.interview.interviewer}
+    onDelete={() => transition(CONFIRM)}
     />
     )}
     {mode === CREATE && <Form 
@@ -60,6 +61,11 @@ export default function Appointment(props){
     onSave = {save}
     />}
     {mode === SAVING && <Status message={"SAVING"}/>}
+    {mode === DELETING && <Status message={"DELETING"}/>}
+
+    {mode === CONFIRM && <Confirm 
+    onCancel = {() => back(SHOW)} 
+    onConfirm = {remove}/>}
 
     </article>
     </Fragment> 

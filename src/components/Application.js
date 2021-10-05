@@ -36,6 +36,7 @@ export default function Application(props) {
       interview={interview}
       interviewers={dailyInterviewers}
       bookInterview={bookInterview}
+      cancelInterview={cancelInterview}
       // allInterviewers={{...state.interviewers}}
       />
       );
@@ -57,16 +58,29 @@ export default function Application(props) {
       ...state.appointments[id],
       interview: {...interview}
     };
-    console.log({appointment})
+    
     // create a copy of the appointments obj and then replace the existing record at the given appointment id with the new appointment obj:
     const appointments = {
       ...state.appointments,
       [id]: appointment
     };
-
-    await axios.put(`/api/appointments/${id}`, appointment)
+    await axios.put(`/api/appointments/${id}`, appointment);
   
-      setState({...state, appointments})
+    setState({...state, appointments});
+  };
+
+  async function cancelInterview(id){
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    }
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    }
+    await axios.delete(`/api/appointments/${id}`);
+
+    setState({...state, appointments});
   };
 
 
