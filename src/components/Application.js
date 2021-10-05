@@ -18,22 +18,25 @@ export default function Application(props) {
   });
 
   const dailyAppointments = getAppointmentsForDay(state, state.day);
-  const dailyInterviewers = getInterviewersForDay(state, state.day)
+  const dailyInterviewers = getInterviewersForDay(state, state.day);
 
   //to set state after merging all useState into one variable above
   const setDay = day => setState({...state, day});
 
   const parsedAppointments = dailyAppointments.map((appointment) => {
-    // console.log("appointment", appointment)
+    console.log("appointment", appointment)
     const interview = getInterview(state, appointment.interview);
+    console.log("interview", interview)
     return (
       <Appointment 
+      // {...appointment}
+      time={appointment.time}
+      id={appointment.id}
       key={appointment.id}
       interview={interview}
-      {...appointment}
       interviewers={dailyInterviewers}
       bookInterview={bookInterview}
-      allInterviewers={{...state.interviewers}}
+      // allInterviewers={{...state.interviewers}}
       />
       );
   });
@@ -48,19 +51,20 @@ export default function Application(props) {
     })
   }, [])
 
-  function bookInterview(id, interview){
+  async function bookInterview(id, interview){
     //create a new appointment obj from the interview obj passed from onSave in form, and take appointments[id] to copy the appointment data at that id
     const appointment = {
       ...state.appointments[id],
       interview: {...interview}
     };
+    console.log({appointment})
     // create a copy of the appointments obj and then replace the existing record at the given appointment id with the new appointment obj:
     const appointments = {
       ...state.appointments,
       [id]: appointment
     };
 
-    axios.put(`/api/appointments/${id}`, appointment);
+    await axios.put(`/api/appointments/${id}`, appointment)
   
       setState({...state, appointments})
   };
