@@ -7,6 +7,14 @@ A user can interact with the application by;
 - Editing an existing interview's details including student name and interviewer
 - Canceling an interview
 
+## Tech Stack Used:
+React
+Webpack, Babel
+Axios
+Storybook
+Webpack Dev Server
+Jest, Testing Library, Cypress
+
 !['Interview scheduler app main page'](https://github.com/caitmich/scheduler/blob/master/docs/homepage.png)
 !["Booking an appointment"](https://github.com/caitmich/scheduler/blob/master/docs/book-appointment.png)
 !['editing an existing appointment'](https://github.com/caitmich/scheduler/blob/master/docs/edit-appointment.png)
