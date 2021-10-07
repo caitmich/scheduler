@@ -3,10 +3,7 @@ import React from "react";
 export default function Show(props){
 
   const removeInterview = () => {
-    // reset();
-    //props.onCancel=back to empty
-    props.onDelete();
-    
+    props.onDelete(); 
   }
 
   return(

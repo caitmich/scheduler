@@ -27,20 +27,19 @@ export default function useApplicationData() {
   }, []);
 
   async function bookInterview(id, interview) {
-    //create a new appointment obj from the interview obj passed from onSave in form, and take appointments[id] to copy the appointment data at that id
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview },
     };
-    // create a copy of the appointments obj and then replace the existing record at the given appointment id with the new appointment obj:
+
     const appointments = {
       ...state.appointments,
       [id]: appointment,
     };
-    await axios.put(`/api/appointments/${id}`, appointment)
-    .then(() => setState((prev) => ({ ...prev, appointments })))
-    .then(() => updateSpots(state.days, appointments))
-    
+    await axios
+      .put(`/api/appointments/${id}`, appointment)
+      .then(() => setState((prev) => ({ ...prev, appointments })))
+      .then(() => updateSpots(state.days, appointments));
   }
 
   async function cancelInterview(id) {
@@ -52,16 +51,17 @@ export default function useApplicationData() {
       ...state.appointments,
       [id]: appointment,
     };
-    await axios.delete(`/api/appointments/${id}`)
-    .then(() => setState((prev) => ({ ...prev, appointments })))
-    .then(() => updateSpots(state.days, appointments))
+    await axios
+      .delete(`/api/appointments/${id}`)
+      .then(() => setState((prev) => ({ ...prev, appointments })))
+      .then(() => updateSpots(state.days, appointments));
   }
 
   function updateSpots(days, appointments) {
     const today = days.findIndex((day) => day.name === state.day);
     const todayAppointments = days[today].appointments;
     const howMany = todayAppointments.map(
-      appointment => appointments[appointment].interview
+      (appointment) => appointments[appointment].interview
     );
     const num = howMany.filter((nulls) => nulls === null);
     const emptySpots = num.length;
